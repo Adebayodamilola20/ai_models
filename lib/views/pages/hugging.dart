@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class HuggingFaceService {
-  static const _token = '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';
+  static const _token = String.fromEnvironment('HUGGING_FACE_TOKEN', defaultValue: '');
   static const _url =
       'https://api-inference.huggingface.co/models/Salesforce/blip-image-captioning-large';
 
