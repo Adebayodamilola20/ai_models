@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "527669672147",
+    "project_id": "beaming-glyph-471220-j6",
+    "storage_bucket": "beaming-glyph-471220-j6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:527669672147:android:e84ec0fb9f667ead3efc26",
+        "android_client_info": {
+          "package_name": "com.example.ai_models"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMAS6UjRZ9uApgHv1gn3AhWiHmQeCJr_8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
