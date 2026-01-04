@@ -1,12 +1,11 @@
-/*
-
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class HuggingFaceService {
-  static const _token = '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';
+  static final _token = dotenv.env['HUGGINGFACE_TOKEN'] ?? '';
   static const _url =
       'https://api-inference.huggingface.co/models/Salesforce/blip-image-captioning-large';
 
@@ -65,4 +64,4 @@ class HuggingFaceService {
     }
   }
 }
-*/
+

@@ -3,6 +3,7 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -40,8 +41,8 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBnvIM-uWIbZ9vmbKQpjIU9raEko4VjdBg',
+  static FirebaseOptions get web => FirebaseOptions(
+    apiKey: dotenv.env['GOOGLE_WEB_API_KEY'] ?? '',
     appId: '1:527669672147:web:406e3ded558c769b3efc26',
     messagingSenderId: '527669672147',
     projectId: 'beaming-glyph-471220-j6',
@@ -50,16 +51,16 @@ class DefaultFirebaseOptions {
     measurementId: 'G-0QL6EXNZLW',
   );
 
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBMAS6UjRZ9uApgHv1gn3AhWiHmQeCJr_8',
+  static FirebaseOptions get android => FirebaseOptions(
+    apiKey: dotenv.env['GOOGLE_ANDROID_API_KEY'] ?? '',
     appId: '1:527669672147:android:e84ec0fb9f667ead3efc26',
     messagingSenderId: '527669672147',
     projectId: 'beaming-glyph-471220-j6',
     storageBucket: 'beaming-glyph-471220-j6.firebasestorage.app',
   );
 
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyD2pN5DZzPGR3fqseuHi0KXxE-dxgC2LXU',
+  static FirebaseOptions get ios => FirebaseOptions(
+    apiKey: dotenv.env['GOOGLE_IOS_API_KEY'] ?? '',
     appId: '1:527669672147:ios:3bcb103949513cf43efc26',
     messagingSenderId: '527669672147',
     projectId: 'beaming-glyph-471220-j6',
@@ -67,8 +68,8 @@ class DefaultFirebaseOptions {
     iosBundleId: 'com.example.aiModels',
   );
 
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyD2pN5DZzPGR3fqseuHi0KXxE-dxgC2LXU',
+  static FirebaseOptions get macos => FirebaseOptions(
+    apiKey: dotenv.env['GOOGLE_MACOS_API_KEY'] ?? '',
     appId: '1:527669672147:ios:3bcb103949513cf43efc26',
     messagingSenderId: '527669672147',
     projectId: 'beaming-glyph-471220-j6',
@@ -76,8 +77,8 @@ class DefaultFirebaseOptions {
     iosBundleId: 'com.example.aiModels',
   );
 
-  static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyBnvIM-uWIbZ9vmbKQpjIU9raEko4VjdBg',
+  static FirebaseOptions get windows => FirebaseOptions(
+    apiKey: dotenv.env['GOOGLE_WEB_API_KEY'] ?? '',
     appId: '1:527669672147:web:6be1e0ff558ed5823efc26',
     messagingSenderId: '527669672147',
     projectId: 'beaming-glyph-471220-j6',
