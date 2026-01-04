@@ -1,8 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+<!--Adding speechto text conversion -->
+<uses-permission android:name="android.permission.RECORD_AUDIO" />
+<uses-permission android:name="android.permission.INTERNET" />
+
     <!--Add camera permission here-->
     <uses-permission android:name="android.permission.CAMERA"/>
     <application
+        android:usesCleartextTraffic="true"
         android:label="ai_models"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">

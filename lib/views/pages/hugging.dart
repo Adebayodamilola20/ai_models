@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class HuggingFaceService {
-  static const _token = String.fromEnvironment('HUGGING_FACE_TOKEN', defaultValue: '');
+  static const _token = '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';
   static const _url =
       'https://api-inference.huggingface.co/models/Salesforce/blip-image-captioning-large';
 
@@ -30,7 +30,7 @@ class HuggingFaceService {
             },
             body: body,
           )
-          .timeout(const Duration(seconds: 120));
+          .timeout(const Duration(seconds: 200));
 
       print('Status Code: ${response.statusCode}');
 
@@ -58,7 +58,7 @@ class HuggingFaceService {
       return "No internet connection";
     } on FormatException {
       return "Invaild JSON response from API";
-    } catch (e) {
+    }catch (e){
       return "Error: $e";
     }
   }

@@ -1,6 +1,11 @@
 import 'package:ai_models/views/pages/IntroPage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:ai_models/shared/ProviderX/provider.dart';
+
 
 class InterfaceSignup extends StatefulWidget {
   const InterfaceSignup({super.key});
@@ -14,6 +19,10 @@ class _InterfaceSignupState extends State<InterfaceSignup> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  final _firstnameController = TextEditingController();
+  final _lastnameController = TextEditingController();
+  final _userController = TextEditingController();
+
   bool _isLoading = false;
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
@@ -23,6 +32,9 @@ class _InterfaceSignupState extends State<InterfaceSignup> {
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+    _firstnameController.dispose();
+    _lastnameController.dispose();
+    _userController.dispose();
     super.dispose();
   }
 
@@ -38,12 +50,19 @@ class _InterfaceSignupState extends State<InterfaceSignup> {
       setState(() => _isLoading = true);
 
       try {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        UserCredential userCredential = await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(
+              email: _emailController.text.trim(),
+              password: _passwordController.text,
+            );
+        await context.read<Userprovider>().saveUserToFirestore(
+          userId: userCredential.user!.uid,
           email: _emailController.text.trim(),
-          password: _passwordController.text,
+          firstname: _firstnameController.text.trim(),
+          lastname: _lastnameController.text.trim(),
+          username: _userController.text.trim(),
         );
 
-     
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Account created successfully!')),
@@ -70,6 +89,7 @@ class _InterfaceSignupState extends State<InterfaceSignup> {
       }
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -130,7 +150,18 @@ class _InterfaceSignupState extends State<InterfaceSignup> {
                   keyboardType: TextInputType.emailAddress,
                 ),
                 const SizedBox(height: 20),
-
+                _buildTextField(
+                  controller: _firstnameController,
+                  hintText: 'First name',
+                  keyboardType: TextInputType.emailAddress,
+                ),
+                const SizedBox(height: 20),
+                _buildTextField(
+                  controller: _lastnameController,
+                  hintText: 'Last name',
+                  keyboardType: TextInputType.emailAddress,
+                ),
+                const SizedBox(height: 20),
                 // Password Field
                 _buildTextField(
                   controller: _passwordController,
