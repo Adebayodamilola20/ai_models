@@ -399,10 +399,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     try {
       String aiResponse = "";
       if (imageToSend != null) {
-        aiResponse = await HuggingFaceService.analyzeImage(
-          imageToSend,
-          message.text,
-        );
+        aiResponse = "Image analysis is not supported.";
       } else {
         final history = _messages
             .whereType<types.TextMessage>()
