@@ -45,3 +45,7 @@ app.*.map.json
 /android/app/release
 .env
 **/Secrets.xcconfig
+lib/firebase_options.dart
+ios/Runner/GoogleService-Info.plist
+macos/Runner/GoogleService-Info.plist
+android/app/google-services.json
