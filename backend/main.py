@@ -56,7 +56,8 @@ async def generate_image(req: GenRequest):
         print(f"Generate Image Error: {e}")
         return Response(content=json.dumps({"error": str(e)}), status_code=500, media_type="application/json")
 
-search_tool = DuckDuckGoSearchRun()
+# Search tool removed to prevent startup crashes
+
 
 app.add_middleware(
     CORSMiddleware,
