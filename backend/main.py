@@ -66,81 +66,58 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# ==========================================
+# endpoints
+# ==========================================
+
 class ChatRequest(BaseModel):
     message: str
     history: List[Dict[str, str]] = []
 
 @app.post("/chat")
 async def chat(req: ChatRequest):
-    return {"response": agent_brain(req.message)}
-
-class TitleRequest(BaseModel):
-    message: str
-
-title_prompt = ChatPromptTemplate.from_template(
-    "You are a helpful assistant that creates short, catchy 3-word titles for chat history. "
-    "Based on this user message, provide ONLY the title without quotes or periods: {first_message}"
-)
-
-@app.post("/generate_title")
-async def generate_title(req: TitleRequest):
+    """BEST FOR POSTMAN: Returns a single JSON response."""
     try:
-        response = await llm.ainvoke(title_prompt.format_messages(first_message=req.message))
-        clean_title = response.content.replace('"', '').replace('.', '').strip()
-        words = clean_title.split()
-        if len(words) > 4:
-            clean_title = " ".join(words[:3])
-        return {"title": clean_title}
+        response = agent_brain(req.message)
+        return {"response": response}
     except Exception as e:
-        print(f"Error generating title: {e}")
-        return {"title": "New Conversation"}
+        print(f"Chat Error: {e}")
+        return {"response": f"Error: {str(e)}"}
 
 @app.post("/chat_stream")
 async def chat_stream(req: ChatRequest):
+    """BEST FOR MOBILE APP: Returns a streaming response."""
     async def generate():
-       
         try:
-            print(f"Searching for latest info on: {req.message}")
-           
-            web_info = search_tool.run(req.message)
+            # Reconstruct chat history
+            messages = []
+            for msg in req.history:
+                if msg.get("role") == "user":
+                    messages.append(HumanMessage(content=msg.get("text", "")))
+                else:
+                    messages.append(AIMessage(content=msg.get("text", "")))
+
+            input_data = {
+                "message": req.message, 
+                "chat_history": messages,
+                "context": "General chat"
+            }
+            
+            async for chunk in llm.astream(prompt.format_messages(**input_data)):
+                content = chunk.content
+                if content:
+                    yield f"data: {json.dumps({'token': content})}\n\n"
+            
+            yield "data: [DONE]\n\n"
         except Exception as e:
-            print(f"Search failed: {e}")
-            web_info = "No recent internet data found."
-
-        # Reconstruct chat history
-        messages = []
-        for msg in req.history:
-            if msg.get("role") == "user":
-                messages.append(HumanMessage(content=msg.get("text", "")))
-            else:
-                messages.append(AIMessage(content=msg.get("text", "")))
-        
-        
-        enhanced_message = (
-            f"CONTEXT FROM INTERNET:\n{web_info}\n\n"
-            f"USER QUERY: {req.message}\n\n"
-            f"INSTRUCTION: Use the context above to provide an up-to-date answer. "
-            f"If the context is missing or irrelevant, answer based on your knowledge."
-        )
-        
-        print(f"--- DEBUG: Search Output ---\n{web_info}\n---------------------------")
-        
-        messages.append(HumanMessage(content=enhanced_message))
-
-        input_data = {
-            "message": enhanced_message, "chat_history": messages[:-1],"context": web_info}
-        
-      
-        async for chunk in llm.astream(prompt.format_messages(**input_data)):
-            content = chunk.content
-            if content:
-                
-                yield f"data: {json.dumps({'token': content})}\n\n"
-        
-        yield "data: [DONE]\n\n"
+            yield f"data: {json.dumps({'error': str(e)})}\n\n"
+            yield "data: [DONE]\n\n"
     
     return StreamingResponse(generate(), media_type="text-event-stream")
 
+# ==========================================
+# Start Server
+# ==========================================
 if __name__ == "__main__":
     import uvicorn
     port = int(os.getenv("PORT", 8080))
