@@ -56,8 +56,8 @@ async def generate_image(req: GenRequest):
         print(f"Generate Image Error: {e}")
         return Response(content=json.dumps({"error": str(e)}), status_code=500, media_type="application/json")
 
-# Search tool removed to prevent startup crashes
-
+# Search tool removed to prevent startup crashes. This may affect the functionality of the generate_image function.
+# Consider adding a fallback or alternative search tool to prevent functionality loss.
 
 app.add_middleware(
     CORSMiddleware,
@@ -97,7 +97,7 @@ async def chat_stream(req: ChatRequest):
                     messages.append(HumanMessage(content=msg.get("text", "")))
                 else:
                     messages.append(AIMessage(content=msg.get("text", "")))
-
+            
             input_data = {
                 "message": req.message, 
                 "chat_history": messages,
